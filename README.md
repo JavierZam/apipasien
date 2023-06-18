@@ -41,7 +41,7 @@ your-messaging-sender-id, your-app-id dan your_measurement_id dengan nilai yang 
 # GET /patients
 Mengambil Semua Data Pasien dari database.
 
-Reponse:
+Response:
 
 Success (200):
 ```json
