@@ -33,10 +33,12 @@ your-messaging-sender-id, your-app-id dan your_measurement_id dengan nilai yang 
 | Method | Endpoint           | Handler                                  |
 | ------ | ------------------ | ---------------------------------------- |
 | GET    | /patients          | getPatients()                            |
-| GET    | /patients/:id	    | getPatientById()                         |
+| GET    | /patients/:id      | getPatientById()                         |
 | POST   | /patients          | createPatient()                          |
 | PUT    | /patients/:id      | updatePatient()                          |
 | DELETE | /patients/:id      | deletePatient()                          |
+| POST   | /patients/:id/drugs| addDrugHistoryToPatient()                |
+| GET    | /drugs             | getDrugs()                               |
 
 # GET /patients
 Mengambil Semua Data Pasien dari database.
@@ -249,6 +251,94 @@ Error (500):
 {
   "error": "Terjadi kesalahan saat menghapus data pasien",
   "message": "Terjadi kesalahan saat menghapus data pasien",
+  "code_respon": 500
+}
+```
+
+# POST /patients/:id/drugs
+Menambahkan history obat ke pasien berdasarkan ID pasien dan nama obat.
+
+Request Body:
+
+```json
+{
+  "nama": "Obat Contoh",
+  "stok": 10
+}
+```
+
+Response:
+
+Success (200):
+```json
+{
+  "data": {
+    "id": "idObat",
+    "nama": "Obat Contoh",
+    "stok": 10
+  },
+  "message": "History obat berhasil ditambahkan",
+  "code_respon": 200
+}
+```
+
+Error (400):
+```json
+{
+  "error": "Obat tidak ditemukan",
+  "message": "Gagal menambahkan history obat",
+  "code_respon": 400
+}
+```
+
+Error (400):
+```json
+{
+  "error": "Stok obat tidak cukup",
+  "message": "Gagal menambahkan history obat",
+  "code_respon": 400
+}
+```
+Error (500):
+```json
+{
+  "error": "Terjadi kesalahan saat menambahkan history obat",
+  "message": "Terjadi kesalahan saat menambahkan history obat",
+  "code_respon": 500
+}
+```
+
+# GET /drugs
+Mengambil semua data obat dari database.
+
+Response:
+
+Success (200):
+
+```json
+{
+  "data": [
+    {
+      "id": "idObat",
+      "nama": "Obat Contoh",
+      "stok": 50
+    },
+    {
+      "id": "idObat2",
+      "nama": "Obat Contoh Lain",
+      "stok": 100
+    }
+  ],
+  "message": "Data obat berhasil diambil",
+  "code_respon": 200
+}
+```
+
+Error (500):
+```json
+{
+  "error": "Terjadi kesalahan saat mengambil data obat",
+  "message": "Terjadi kesalahan saat mengambil data obat",
   "code_respon": 500
 }
 ```
