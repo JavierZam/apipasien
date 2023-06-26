@@ -30,15 +30,16 @@ your-messaging-sender-id, your-app-id dan your_measurement_id dengan nilai yang 
 
 # Endpoints
 
-| Method | Endpoint           | Handler                                  |
-| ------ | ------------------ | ---------------------------------------- |
-| GET    | /patients          | getPatients()                            |
-| GET    | /patients/:id      | getPatientById()                         |
-| POST   | /patients          | createPatient()                          |
-| PUT    | /patients/:id      | updatePatient()                          |
-| DELETE | /patients/:id      | deletePatient()                          |
-| POST   | /patients/:id/drugs| addDrugHistoryToPatient()                |
-| GET    | /drugs             | getDrugs()                               |
+| Method | Endpoint                   | Handler                                  |
+| ------ | ---------------------------| ---------------------------------------- |
+| GET    | /patients                  | getPatients()                            |
+| GET    | /patients/:id              | getPatientById()                         |
+| POST   | /patients                  | createPatient()                          |
+| PUT    | /patients/:id              | updatePatient()                          |
+| DELETE | /patients/:id              | deletePatient()                          |
+| POST   | /patients/:id/drugs        | addDrugHistoryToPatient()                |
+| GET    | /drugs                     | getDrugs()                               |
+| GET    | /patients/:id/drugHistory  | getdrugHistory()                         |
 
 # GET /patients
 Mengambil Semua Data Pasien dari database.
@@ -339,6 +340,39 @@ Error (500):
 {
   "error": "Terjadi kesalahan saat mengambil data obat",
   "message": "Terjadi kesalahan saat mengambil data obat",
+  "code_respon": 500
+}
+```
+# GET /patients/:id/drugHistory
+Mengambil Semua History Obat Pasien Berdasarkan ID.
+
+Response:
+
+Success (200):
+```json
+{
+  "data": [
+    {
+      "id": "abc123",
+      "nama": "Paracetamol",
+      "stok": 5
+    },
+    {
+      "id": "def456",
+      "nama": "Antibiotik",
+      "stok": 3
+    }
+  ],
+  "message": "History obat berhasil diambil",
+  "code_respon": 200
+}
+```
+
+Error (500):
+```json
+{
+  "error": "Terjadi kesalahan saat mengambil history obat",
+  "message": "Terjadi kesalahan saat mengambil history obat",
   "code_respon": 500
 }
 ```
