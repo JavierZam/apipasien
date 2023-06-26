@@ -169,6 +169,82 @@ app.delete('/patients/:id', async (req, res) => {
   }
 });
 
+app.post('/patients/:id/drugs', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { nama, stok } = req.body;
+
+    // Cari obat di collection 'drugs'
+    const drugSnapshot = await db.collection('drugs').where('nama', '==', nama).get();
+
+    if (drugSnapshot.empty) {
+      return res.status(400).json({
+        error: 'Obat tidak ditemukan',
+        message: 'Gagal menambahkan history obat',
+        code_respon: 400,
+      });
+    }
+
+    let drugDoc = drugSnapshot.docs[0];
+
+    // Periksa apakah stok cukup
+    if (drugDoc.data().stok < stok) {
+      return res.status(400).json({
+        error: 'Stok obat tidak cukup',
+        message: 'Gagal menambahkan history obat',
+        code_respon: 400,
+      });
+    }
+
+    // Kurangi stok obat
+    await db
+      .collection('drugs')
+      .doc(drugDoc.id)
+      .update({ stok: drugDoc.data().stok - stok });
+
+    // Tambahkan history obat ke pasien
+    const drugHistory = { nama, stok };
+    await db.collection('patients').doc(id).collection('drugHistory').add(drugHistory);
+
+    res.json({
+      data: {
+        id: drugDoc.id,
+        ...drugHistory,
+      },
+      message: 'History obat berhasil ditambahkan',
+      code_respon: 200,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      message: 'Terjadi kesalahan saat menambahkan history obat',
+      code_respon: 500,
+    });
+  }
+});
+
+app.get('/drugs', async (req, res) => {
+  try {
+    const snapshot = await db.collection('drugs').get();
+    const drugs = snapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    }));
+
+    res.json({
+      data: drugs,
+      message: 'Data obat berhasil diambil',
+      code_respon: 200,
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: error.message,
+      message: 'Terjadi kesalahan saat mengambil data obat',
+      code_respon: 500,
+    });
+  }
+});
+
 // Fungsi validasi untuk data pasien
 function validatePatient(patient) {
   const schema = Joi.object({
